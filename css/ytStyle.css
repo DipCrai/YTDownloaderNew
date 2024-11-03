@@ -1,0 +1,8 @@
+.download-btn-div {
+    margin-left: 8px;
+    width: 36px;
+    height: 36px;
+}
+.download-btn {
+    cursor: pointer;
+}
