@@ -1,4 +1,3 @@
-### This extension allows users to download the current track from yt music. 
 *Attention, this extension is made for informational purposes; the author in no way encourages piracy.
 
 # Installation
