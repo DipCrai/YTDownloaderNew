@@ -7,7 +7,7 @@
 # Uninstallation
 * Delete all downloaded files
 * Open cmd
-* Type winget remove ffmpeg and press enter
+* Type `winget remove ffmpeg` and press enter
 * Open regedit
 * Go to HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
 * Delete variable called YTDL-server-by-DC
