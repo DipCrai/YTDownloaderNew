@@ -1,3 +1,6 @@
+### This extension allows users to download the current track from yt music. 
+*Attention, this extension is made for informational purposes; the author in no way encourages piracy.
+
 # Installation
 * Download latest YTDownloaderNew.zip and unpack it
 * Go to chrome://extensions/ (or about:extensions) and enable developer mode
