@@ -12,6 +12,6 @@
 * Open cmd
 * Type `winget remove ffmpeg` and press enter (*If you reinstalling extension this step is not necessary)
 * Open regedit
-* Go to HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+* Go to `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`
 * Delete variable called `YTDL-server-by-DC`
 * Reload PC
