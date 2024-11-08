@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import yt_dlp
 import re
 import subprocess
@@ -7,6 +8,7 @@ import sys
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 def get_download_folder():
     home = os.path.expanduser("~")
@@ -85,7 +87,7 @@ def download_video():
         ydl_format = f'bestvideo[height<={quality}]+bestaudio'
 
     if not video_url:
-        return jsonify({"error": "Отсутствует ссылка на видео"}), 400
+        return jsonify({"message": "Отсутствует ссылка на видео"}), 400
 
     video_title = re.sub(r'[<>:"/\\|?*]', '', video_title)
     download_folder = get_download_folder()
@@ -104,7 +106,7 @@ def download_video():
 
         return jsonify({"message": "Видео успешно скачано", "filename": f"{video_title}.{video_format}"}), 200
     except Exception as e:
-        return jsonify({"error": "Ошибка: " + str(e)}), 500
+        return jsonify({"message": "Ошибка: " + str(e)}), 500
 
 if __name__ == '__main__':
     check_ffmpeg()

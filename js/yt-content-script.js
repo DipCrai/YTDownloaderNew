@@ -22,7 +22,7 @@
             downloadButton.title = "Download";
 
             const waitForRenderer = setInterval(() => {
-                youtubeMenuRenderer = document.querySelector('[menu-active]');
+                youtubeMenuRenderer = document.querySelector('div ytd-menu-renderer.style-scope.ytd-watch-metadata[menu-active][has-items]');
                 if(youtubeMenuRenderer !== null) {
                     clearInterval(waitForRenderer);
                     buttonDiv.appendChild(downloadButton)
@@ -36,8 +36,14 @@
     }
     const downloadEventHandler = async () => {
         const url = window.location.href.split('&')[0];
+        let quality;
         console.log(url);
-        const quality = youtubePlayer.videoHeight;
+        if (youtubePlayer.videoHeight) {
+            quality = youtubePlayer.videoHeight;
+        }
+        else {
+            quality = "9999"
+        }
         let videoTitle;
 
         const videoTitleElement = document.getElementsByClassName("ytd-watch-metadata")[4];
@@ -47,7 +53,7 @@
         else {
             videoTitle = "video" + quality;
         }
-        const serverUrl = "http://localhost:3000/download?url=" + encodeURIComponent(url) + "&quality=" + quality + "&filename=" + videoTitle;
+        const serverUrl = "http://localhost:3000/download?url=" + encodeURIComponent(url) + "&quality=" + encodeURIComponent(quality) + "&filename=" + encodeURIComponent(videoTitle);
         try {
             const response = await fetch(serverUrl);
     
