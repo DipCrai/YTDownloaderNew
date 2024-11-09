@@ -38,10 +38,10 @@
         const url = window.location.href.split('&')[0];
         let quality;
         console.log(url);
-        if (youtubePlayer.videoHeight) {
+        try {
             quality = youtubePlayer.videoHeight;
         }
-        else {
+        catch {
             quality = "9999"
         }
         let videoTitle;

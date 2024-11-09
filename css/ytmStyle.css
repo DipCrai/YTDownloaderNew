@@ -14,3 +14,16 @@
 .download-btn.disabled {
     cursor: default;
 }
+.player-toggle-btn-div {
+    display: inline-block;
+    position: relative;
+    margin: 0 8px 0 0;
+    width: 40px;
+    height: 40px;
+    align-content: center;
+    align-items: center;
+}
+.player-toggle-btn {
+    padding: 8px;
+    cursor: pointer;
+}

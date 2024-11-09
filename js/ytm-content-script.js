@@ -1,28 +1,42 @@
 (() => {
     let downloadButton;
-    let buttonDiv;
-    console.log("INIIITTT");
+    let playerButton;
+    let downloadButtonDiv;
+    let playerButtonDiv;
 
     const newVideoLoaded = () => {
         const downloadButtonExist = document.getElementsByClassName("download-btn")[0];
+        const playerButtonExist = document.getElementsByClassName("player-toggle-btn")[0];
+        const rightControls = document.querySelector(".right-controls-buttons.style-scope.ytmusic-player-bar");
 
         if (!downloadButtonExist) {
-            buttonDiv = document.createElement("div");
-            buttonDiv.className = "download-btn-div";
+            downloadButtonDiv = document.createElement("div");
+            downloadButtonDiv.className = "download-btn-div";
             downloadButton = document.createElement("img");
             downloadButton.src = chrome.runtime.getURL("images/grey-download-button-24.png");
             downloadButton.className = "download-btn";
             downloadButton.title = "Download";
             downloadButton.addEventListener("click", downloadEventHandler);
 
-            const rightControls = document.querySelector(".right-controls-buttons.style-scope.ytmusic-player-bar");
-            buttonDiv.appendChild(downloadButton)
-            rightControls.appendChild(buttonDiv);
+            downloadButtonDiv.appendChild(downloadButton)
+            rightControls.appendChild(downloadButtonDiv);
             let currentUrl = location.href;
 
             setInterval(() => {
                     updateButtonState();
             }, 500);
+        }
+        if (!playerButtonExist) {
+            playerButtonDiv = document.createElement("div");
+            playerButtonDiv.className = "player-toggle-btn-div";
+            playerButton = document.createElement("img");
+            playerButton.src = chrome.runtime.getURL("images/disable-player-button-24.png");
+            playerButton.className = "player-toggle-btn";
+            playerButton.title = "Toggle player";
+            playerButton.addEventListener("click", togglePlayer);
+
+            playerButtonDiv.appendChild(playerButton);
+            rightControls.appendChild(playerButtonDiv);
         }
     };
 
@@ -37,7 +51,7 @@
         else {
             videoTitle = "music";
         }
-        const serverUrl = "http://localhost:3000/download?url=" + encodeURIComponent(url) + "&filename=" + videoTitle;
+        const serverUrl = "http://localhost:3000/download?url=" + encodeURIComponent(url) + "&filename=" + encodeURIComponent(videoTitle);
         try {
             const response = await fetch(serverUrl);
     
@@ -60,17 +74,24 @@
         else {
             downloadButton.classList.add('disabled');
             downloadButton.removeEventListener("click", downloadEventHandler);
-            downloadButton.src = chrome.runtime.getURL("images/disabled-download-button-24.png"); // Убедитесь, что у вас есть изображение для отключенной кнопки
+            downloadButton.src = chrome.runtime.getURL("images/disabled-download-button-24.png");
         }
     };
-    const monitorUrlChanges = () => {
-        const pushState = history.pushState;
-        history.pushState = function(state) {
-            pushState.apply(history, arguments);
-            updateButtonState();
-        };
+    const togglePlayer = () => {
+        console.warn("AADADADDADAD");
+        const player = document.querySelector("#player", ".style-scope.ytmusic-player-page");
 
-        window.addEventListener('popstate', updateButtonState);
-    };
+        if (player)
+        {
+            if (player.style.display === "") {
+                player.style.display = "none";
+                playerButton.src = chrome.runtime.getURL("images/enable-player-button-24.png");
+            }
+            else if (player.style.display === "none"){
+                player.style.display = "";
+                playerButton.src = chrome.runtime.getURL("images/disable-player-button-24.png");
+            }
+        }
+    }
     newVideoLoaded();
 })();
