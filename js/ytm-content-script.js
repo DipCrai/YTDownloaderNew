@@ -78,7 +78,6 @@
         }
     };
     const togglePlayer = () => {
-        console.warn("AADADADDADAD");
         const player = document.querySelector("#player", ".style-scope.ytmusic-player-page");
 
         if (player)
