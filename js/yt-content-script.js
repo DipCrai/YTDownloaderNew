@@ -2,13 +2,6 @@
     let youtubeMenuRenderer, youtubePlayer, buttonDiv;;
     let currentVideo = "";
 
-    chrome.runtime.onMessage.addListener((obj, sender, response) => {
-        const { type } = obj;
-        if (type === "VIDEOLOADED") {
-            newVideoLoaded();
-        }
-    })
-
     const newVideoLoaded = () => {
         const downloadButtonExist = document.getElementsByClassName("download-btn")[0];
 

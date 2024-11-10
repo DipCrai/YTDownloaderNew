@@ -20,7 +20,6 @@
 
             downloadButtonDiv.appendChild(downloadButton)
             rightControls.appendChild(downloadButtonDiv);
-            let currentUrl = location.href;
 
             setInterval(() => {
                     updateButtonState();
@@ -93,23 +92,28 @@
         }
     }
     const playlistLoaded = () => {
-        const playlistName = document.querySelector("ytmusic-responsive-header-renderer > h2", ".style-scope.ytmusic-responsive-header-renderer");
-        playlistName.style.display = "inline-flex";
-        playlistName.style.justifyContent = "center";
-        playlistName.style.width = "100%";
+        const downloadButtonExist = document.getElementsByClassName("pl-dl-btn")[0];
 
-        const plDlBtnDiv = document.createElement("div");
-        plDlBtnDiv.className = "pl-dl-btn-div";
+        if (!downloadButtonExist) {
+            const playlistName = document.querySelector("ytmusic-responsive-header-renderer > h2", ".style-scope.ytmusic-responsive-header-renderer");
+            playlistName.style.display = "inline-flex";
+            playlistName.style.justifyContent = "center";
+            playlistName.style.width = "100%";
 
-        const plDlBtn = document.createElement("img");
-        plDlBtn.className = "pl-dl-btn";
-        plDlBtn.src = chrome.runtime.getURL("images/white-download-button-24.png");
-        plDlBtn.title = "Download playlist";
-        plDlBtn.style.verticalAlign = "middle";
-        plDlBtn.addEventListener("click", downloadPlaylistHandler);
+            const plDlBtnDiv = document.createElement("div");
+            plDlBtnDiv.className = "pl-dl-btn-div";
 
-        plDlBtnDiv.appendChild(plDlBtn);
-        playlistName.appendChild(plDlBtnDiv);
+            const plDlBtn = document.createElement("img");
+            plDlBtn.className = "pl-dl-btn";
+            plDlBtn.src = chrome.runtime.getURL("images/white-download-button-24.png");
+            plDlBtn.title = "Download playlist";
+            plDlBtn.style.verticalAlign = "middle";
+            plDlBtn.style.cursor = "pointer";
+            plDlBtn.addEventListener("click", downloadPlaylistHandler);
+
+            plDlBtnDiv.appendChild(plDlBtn);
+            playlistName.appendChild(plDlBtnDiv);
+        }
     }
     const downloadPlaylistHandler = async () => {
         const url = window.location.href;
@@ -124,5 +128,10 @@
         }
     }
     newVideoLoaded();
+    const plMonitor = setInterval(() => {
+        if (window.location.href.includes("music.youtube.com/playlist")) {
+            playlistLoaded()
+        }
+    }, 500)
     playlistLoaded();
 })();
