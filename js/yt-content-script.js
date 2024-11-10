@@ -44,16 +44,7 @@
         catch {
             quality = "9999"
         }
-        let videoTitle;
-
-        const videoTitleElement = document.getElementsByClassName("ytd-watch-metadata")[4];
-        if (videoTitleElement) {
-            videoTitle = videoTitleElement.textContent.trim();
-        }
-        else {
-            videoTitle = "video" + quality;
-        }
-        const serverUrl = "http://localhost:3000/download?url=" + encodeURIComponent(url) + "&quality=" + encodeURIComponent(quality) + "&filename=" + encodeURIComponent(videoTitle);
+        const serverUrl = "http://localhost:3000/video?url=" + encodeURIComponent(url) + "&quality=" + encodeURIComponent(quality);
         try {
             const response = await fetch(serverUrl);
     

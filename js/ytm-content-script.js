@@ -51,7 +51,7 @@
         else {
             videoTitle = "music";
         }
-        const serverUrl = "http://localhost:3000/download?url=" + encodeURIComponent(url) + "&filename=" + encodeURIComponent(videoTitle);
+        const serverUrl = "http://localhost:3000/video?url=" + encodeURIComponent(url) + "&filename=" + encodeURIComponent(videoTitle);
         try {
             const response = await fetch(serverUrl);
     
@@ -92,5 +92,37 @@
             }
         }
     }
+    const playlistLoaded = () => {
+        const playlistName = document.querySelector("ytmusic-responsive-header-renderer > h2", ".style-scope.ytmusic-responsive-header-renderer");
+        playlistName.style.display = "inline-flex";
+        playlistName.style.justifyContent = "center";
+        playlistName.style.width = "100%";
+
+        const plDlBtnDiv = document.createElement("div");
+        plDlBtnDiv.className = "pl-dl-btn-div";
+
+        const plDlBtn = document.createElement("img");
+        plDlBtn.className = "pl-dl-btn";
+        plDlBtn.src = chrome.runtime.getURL("images/white-download-button-24.png");
+        plDlBtn.title = "Download playlist";
+        plDlBtn.style.verticalAlign = "middle";
+        plDlBtn.addEventListener("click", downloadPlaylistHandler);
+
+        plDlBtnDiv.appendChild(plDlBtn);
+        playlistName.appendChild(plDlBtnDiv);
+    }
+    const downloadPlaylistHandler = async () => {
+        const url = window.location.href;
+        const serverUrl = "http://localhost:3000/playlist?url=" + encodeURIComponent(url);
+        try {
+            const response = await fetch(serverUrl);
+    
+            const data = await response.json();
+            console.log("Ответ от сервера:", data);
+        } catch (error) {
+            console.warn("Ошибка при запросе к серверу:", error);
+        }
+    }
     newVideoLoaded();
+    playlistLoaded();
 })();

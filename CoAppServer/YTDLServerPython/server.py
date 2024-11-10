@@ -73,11 +73,10 @@ Comment=My Flask Application
 def home():
     return "Добро пожаловать на простой сервер!"
 
-@app.route('/download', methods=['GET'])
+@app.route('/video', methods=['GET'])
 def download_video():
     video_url = request.args.get('url')
     quality = request.args.get('quality', 'best')
-    video_title = request.args.get('filename', f'video_{quality}')
 
     if "music.youtube.com" in video_url:
         video_format = 'mp3'
@@ -89,9 +88,8 @@ def download_video():
     if not video_url:
         return jsonify({"message": "Отсутствует ссылка на видео"}), 400
 
-    video_title = re.sub(r'[<>:"/\\|?*]', '', video_title)
     download_folder = get_download_folder()
-    output_path = os.path.join(download_folder, f'DownloadedVideos/{video_title}.{video_format}')
+    output_path = os.path.join(download_folder, f'DownloadedVideos/%(title)s.{video_format}')
     print(output_path)
 
     try:
@@ -104,7 +102,34 @@ def download_video():
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([video_url])
 
-        return jsonify({"message": "Видео успешно скачано", "filename": f"{video_title}.{video_format}"}), 200
+        return jsonify({"message": "Видео успешно скачано"}), 200
+    except Exception as e:
+        return jsonify({"message": "Ошибка: " + str(e)}), 500
+
+@app.route('/playlist', methods=['GET'])
+def download_playlist():
+    playlist_url = request.args.get("url")
+    download_folder = get_download_folder()
+    output_path = os.path.join(download_folder, f'DownloadedPlaylists/%(playlist_title)s/%(title)s.%(ext)s')
+    try:
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'noplaylist': False,
+            'quiet': False,
+            'extractaudio': True,
+            'audioquality': 0,
+            'outtmpl': output_path,
+            'ignoreerrors': True,
+            'postprocessors': [{
+                'key': 'FFmpegMetadata',
+                'add_metadata': True,
+            }],
+        }
+        
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([playlist_url])
+            return jsonify({"message": "Плейлист успешно скачан"}), 200
+        
     except Exception as e:
         return jsonify({"message": "Ошибка: " + str(e)}), 500
 

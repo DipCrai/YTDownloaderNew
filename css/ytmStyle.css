@@ -27,3 +27,7 @@
     padding: 8px;
     cursor: pointer;
 }
+.pl-dl-btn-div {
+    margin-left: 12px;
+    align-content: center;
+}
