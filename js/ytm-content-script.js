@@ -3,13 +3,16 @@
     let playerButton;
     let downloadButtonDiv;
     let playerButtonDiv;
+    let valueInterval;
 
     const newVideoLoaded = () => {
         const downloadButtonExist = document.getElementsByClassName("download-btn")[0];
         const playerButtonExist = document.getElementsByClassName("player-toggle-btn")[0];
+        const volumeValueExist = document.getElementsByClassName("ytdl-volume-value")[0];
         const rightControls = document.querySelector(".right-controls-buttons.style-scope.ytmusic-player-bar");
+        const volumeSlider = document.querySelector("tp-yt-paper-slider", "#volume-slider");
 
-        if (!downloadButtonExist) {
+        if (!downloadButtonExist && rightControls) {
             downloadButtonDiv = document.createElement("div");
             downloadButtonDiv.className = "download-btn-div";
             downloadButton = document.createElement("img");
@@ -25,7 +28,7 @@
                     updateButtonState();
             }, 500);
         }
-        if (!playerButtonExist) {
+        if (!playerButtonExist && rightControls) {
             playerButtonDiv = document.createElement("div");
             playerButtonDiv.className = "player-toggle-btn-div";
             playerButton = document.createElement("img");
@@ -36,6 +39,30 @@
 
             playerButtonDiv.appendChild(playerButton);
             rightControls.appendChild(playerButtonDiv);
+        }
+        if (!volumeValueExist && volumeSlider)
+        {
+            if (valueInterval)
+            {
+                clearInterval(valueInterval);
+            }
+            const volumeValue = document.createElement("p");
+            volumeValue.innerHTML = volumeSlider.getAttribute("aria-valuenow") + "%";
+            volumeSlider.appendChild(volumeValue);
+            volumeSlider.style.width = "200px";
+
+            const playerBar = document.querySelector("ytmusic-player-bar", ".style-scope.ytmusic-app");
+            if (playerBar) {
+                playerBar.addEventListener("mouseover", () => {
+                    volumeSlider.style.opacity = "1";
+                    volumeSlider.classList.add("on-hover");
+                });
+            }
+
+            valueInterval = setInterval(() => {
+                volumeValue.innerHTML = volumeSlider.getAttribute("aria-valuenow") + "%";
+                volumeSlider.classList.add("on-hover");
+            }, 200);            
         }
     };
 
@@ -93,9 +120,9 @@
     }
     const playlistLoaded = () => {
         const downloadButtonExist = document.getElementsByClassName("pl-dl-btn")[0];
+        const playlistName = document.querySelector("ytmusic-responsive-header-renderer > h2", ".style-scope.ytmusic-responsive-header-renderer");
 
-        if (!downloadButtonExist) {
-            const playlistName = document.querySelector("ytmusic-responsive-header-renderer > h2", ".style-scope.ytmusic-responsive-header-renderer");
+        if (!downloadButtonExist && playlistName) {
             playlistName.style.display = "inline-flex";
             playlistName.style.justifyContent = "center";
             playlistName.style.width = "100%";
