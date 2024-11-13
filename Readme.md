@@ -9,8 +9,9 @@
 # Uninstallation
 * Delete all downloaded files
 * Open `chrome://extensions/` (or `about:extensions`) and delete YTDL
+* (*If you reinstalling extension following steps are not necessary)
 * Open cmd
-* Type `winget remove ffmpeg` and press enter (*If you reinstalling extension this step is not necessary)
+* Type `winget remove ffmpeg` and press enter
 * Open regedit
 * Go to `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`
 * Delete variable called `YTDL-server-by-DC`
