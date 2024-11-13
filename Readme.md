@@ -10,7 +10,7 @@
 1. Delete all downloaded files
 2. Open `chrome://extensions/` (or `about:extensions`) and delete YTDL
 
-### (*If you reinstalling extension next steps are not necessary)
+### If you reinstalling extension next steps are not necessary
 
 3. Open cmd
 4. Type `winget remove ffmpeg` and press enter
