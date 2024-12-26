@@ -21,7 +21,7 @@
             downloadButton.title = "Download";
             downloadButton.addEventListener("click", downloadEventHandler);
 
-            downloadButtonDiv.appendChild(downloadButton)
+            downloadButtonDiv.appendChild(downloadButton);
             rightControls.appendChild(downloadButtonDiv);
 
             setInterval(() => {
@@ -64,6 +64,86 @@
                 volumeSlider.classList.add("on-hover");
             }, 200);            
         }
+        if (!document.getElementById('custom-speed-slider')) {
+            const leftControls = document.querySelector('.left-controls');
+            if (!leftControls) {
+                console.error('Cannot find left-controls.');
+                return;
+            }
+        
+            const sliderContainer = document.createElement('div');
+            sliderContainer.id = 'custom-speed-slider-container';
+            sliderContainer.style.display = 'flex';
+            sliderContainer.style.alignItems = 'center';
+            sliderContainer.style.marginLeft = '8px';
+        
+            const slider = document.createElement('tp-yt-paper-slider');
+            slider.id = 'custom-speed-slider';
+            slider.className = 'style-scope ytmusic-player-bar';
+            slider.setAttribute('min', '0.5');
+            slider.setAttribute('max', '2.0');
+            slider.setAttribute('step', '0.05');
+            slider.setAttribute('value', '1.0');
+            slider.setAttribute('aria-label', 'Song speed');
+            slider.style.width = '120px';
+        
+            const speedValue = document.createElement("p");
+            speedValue.innerHTML = slider.value + "x";
+
+            sliderContainer.appendChild(speedValue);
+            sliderContainer.appendChild(slider);
+            leftControls.appendChild(sliderContainer);
+        
+            const style = document.createElement('style');
+            style.innerHTML = `
+                tp-yt-paper-slider {
+                    --paper-slider-knob-color: #fff;
+                    --paper-slider-active-color: #fff;
+                    --paper-slider-container-color: #333;
+                }
+        
+                tp-yt-paper-slider::part(thumb) {
+                    background: #fff !important;
+                    border-radius: 50%;
+                }
+        
+                tp-yt-paper-slider::part(bar) {
+                    background: #fff !important;
+                }
+        
+                tp-yt-paper-slider::part(track) {
+                    background: #333 !important;
+                }
+            `;
+            document.head.appendChild(style);
+
+            const video = document.querySelector('video');
+            let valueInterval = setInterval(() => {
+                var a = slider.getAttribute("aria-valuenow");
+                speedValue.innerHTML = a + "x";
+                video.playbackRate = a;
+                slider.classList.add("on-hover");
+            }, 200);
+
+            sliderContainer.addEventListener('wheel', (event) => {
+                event.preventDefault();
+                const step = parseFloat(slider.getAttribute('step'));
+                let currentValue = parseFloat(slider.value || slider.getAttribute('value'));
+                const min = parseFloat(slider.getAttribute('min'));
+                const max = parseFloat(slider.getAttribute('max'));
+        
+                if (event.deltaY < 0) {
+                    currentValue = Math.min(currentValue + step, max);
+                } else {
+                    currentValue = Math.max(currentValue - step, min);
+                }
+        
+                slider.value = currentValue.toFixed(2);
+                slider.setAttribute('value', currentValue.toFixed(2));
+                video.playbackRate = currentValue;
+                speedValue.innerHTML = currentValue.toFixed(2) + "x";
+            });
+        }           
     };
 
     const downloadEventHandler = async () => {
@@ -103,6 +183,7 @@
             downloadButton.src = chrome.runtime.getURL("images/disabled-download-button-24.png");
         }
     };
+
     const togglePlayer = () => {
         const player = document.querySelector("#player", ".style-scope.ytmusic-player-page");
 
@@ -117,7 +198,8 @@
                 playerButton.src = chrome.runtime.getURL("images/disable-player-button-24.png");
             }
         }
-    }
+    };
+
     const playlistLoaded = () => {
         const downloadButtonExist = document.getElementsByClassName("pl-dl-btn")[0];
         const playlistName = document.querySelector("ytmusic-responsive-header-renderer > h2", ".style-scope.ytmusic-responsive-header-renderer");
@@ -141,7 +223,8 @@
             plDlBtnDiv.appendChild(plDlBtn);
             playlistName.appendChild(plDlBtnDiv);
         }
-    }
+    };
+
     const downloadPlaylistHandler = async () => {
         const url = window.location.href;
         const serverUrl = "http://localhost:3000/playlist?url=" + encodeURIComponent(url);
@@ -153,12 +236,15 @@
         } catch (error) {
             console.warn("Ошибка при запросе к серверу:", error);
         }
-    }
+    };
+
     newVideoLoaded();
+
     const plMonitor = setInterval(() => {
         if (window.location.href.includes("music.youtube.com/playlist")) {
-            playlistLoaded()
+            playlistLoaded();
         }
-    }, 500)
+    }, 500);
+
     playlistLoaded();
 })();
