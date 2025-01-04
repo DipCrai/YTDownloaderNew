@@ -143,7 +143,11 @@
         
                 slider.value = currentValue.toFixed(2);
                 slider.setAttribute('value', currentValue.toFixed(2));
-                video.playbackRate = currentValue;
+                try
+                {
+                    video.playbackRate = currentValue;
+                }
+                catch { }
                 speedValue.innerHTML = currentValue.toFixed(2) + "x";
             });
         }           
