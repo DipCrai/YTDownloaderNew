@@ -44,7 +44,7 @@
             const data = await response.json();
             console.log("Ответ от сервера:", data);
         } catch (error) {
-            console.warn("Ошибка при запросе к серверу:", error);
+            console.log("Ошибка при запросе к серверу:", error);
         }
     }
     newVideoLoaded();

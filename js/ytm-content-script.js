@@ -16,13 +16,12 @@
             downloadButtonDiv = document.createElement("div");
             downloadButtonDiv.className = "download-btn-div";
             downloadButton = document.createElement("img");
-            downloadButton.src = chrome.runtime.getURL("images/grey-download-button-24.png");
+            downloadButton.src = chrome.runtime.getURL("images/disabled-download-button-24.png");
             downloadButton.className = "download-btn";
             downloadButton.title = "Download";
-            downloadButton.addEventListener("click", downloadEventHandler);
-
             downloadButtonDiv.appendChild(downloadButton);
             rightControls.appendChild(downloadButtonDiv);
+            downloadButton.classList.add('disabled');
 
             setInterval(() => {
                     updateButtonState();
@@ -121,8 +120,12 @@
             let valueInterval = setInterval(() => {
                 var a = slider.getAttribute("aria-valuenow");
                 speedValue.innerHTML = a + "x";
-                video.playbackRate = a;
                 slider.classList.add("on-hover");
+                try
+                {
+                    video.playbackRate = a;
+                }
+                catch { }
             }, 200);
 
             sliderContainer.addEventListener('wheel', (event) => {
@@ -164,24 +167,44 @@
             const data = await response.json();
             console.log("Ответ от сервера:", data);
         } catch (error) {
-            console.warn("Ошибка при запросе к серверу:", error);
+            updateButtonState();
+            console.log("Ошибка при запросе к серверу:", error);
         }
     };
 
     const updateButtonState = () => {
         const url = window.location.href;
         const regexVideo = /https:\/\/music\.youtube\.com\/watch\?v=/i;
+        const serverUrl = "http://localhost:3000/";
 
-        if (url.match(regexVideo)) {
-            downloadButton.classList.remove('disabled');
-            downloadButton.addEventListener("click", downloadEventHandler);
-            downloadButton.src = chrome.runtime.getURL("images/grey-download-button-24.png");
-        } 
-        else {
+        const disableButton = () => {
             downloadButton.classList.add('disabled');
             downloadButton.removeEventListener("click", downloadEventHandler);
             downloadButton.src = chrome.runtime.getURL("images/disabled-download-button-24.png");
         }
+        const enableButton = () => {
+            downloadButton.classList.remove('disabled');
+            downloadButton.addEventListener("click", downloadEventHandler);
+            downloadButton.src = chrome.runtime.getURL("images/grey-download-button-24.png");
+        }
+
+        fetch(serverUrl, { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    if (url.match(regexVideo)) {
+                        enableButton();
+                    } 
+                    else {
+                        disableButton();
+                    }
+                }
+                else {
+                    disableButton();
+                }
+            })
+            .catch(error => {
+                disableButton();
+            });
     };
 
     const togglePlayer = () => {
@@ -234,7 +257,7 @@
             const data = await response.json();
             console.log("Ответ от сервера:", data);
         } catch (error) {
-            console.warn("Ошибка при запросе к серверу:", error);
+            console.log("Ошибка при запросе к серверу:", error);
         }
     };
 
