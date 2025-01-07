@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "YTDL",
     "description": "sample extension",
-    "version": "4.1",
+    "version": "4.2",
     "icons": 
     {
         "48": "images/icon-48.png"
