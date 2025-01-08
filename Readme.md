@@ -1,5 +1,5 @@
 ## Attention
-This extension is intended solely for informational and educational purposes. The author does not encourage piracy in any way. Please be aware that downloading and distributing copyrighted materials without the consent of the copyright holder may result in legal consequences.
+This extension is intended only for informational and educational purposes. The author does not encourage piracy in any way. Please be aware that downloading and distributing copyrighted materials without the consent of the copyright holder may result in legal consequences.
 
 ## Installation
 1. Download the latest `YTDownloaderNew.zip` and unpack the archive.
