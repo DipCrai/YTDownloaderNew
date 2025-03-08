@@ -17,9 +17,15 @@ This extension is intended only for informational and educational purposes. The 
 5. Run `server.exe` and follow the on-screen instructions.
 
 ## Reinstallation
+### Chromium-based browsers
 1. Delete all downloaded files.
 2. Go to `chrome://extensions/` (or `about:extensions`) and remove the YTDL extension.
 3. Install extension as usual.
+
+### Firefox-based browsers
+1. Delete all downloaded files.
+2. Go to `about:debugging`.
+3. Go to `This Firefox` and remove the YTDL extension.
 
 ## Uninstallation
 1. Delete all downloaded files.
