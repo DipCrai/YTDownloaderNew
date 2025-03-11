@@ -10,11 +10,10 @@ This extension is intended only for informational and educational purposes. The 
 5. Run `server.exe` and follow the on-screen instructions.
 
 ### Firefox-based browsers
-*The extension will work until the browser or PC is restarted.
-1. Download the latest `YTDownloaderNew.zip` and unpack the archive.
-2. Go to `about:debugging`.
-3. Go to `This Firefox`.
-4. Click on the "Load Temporary Add-on" button and select any file from the folder where you extracted `YTDownloaderNew.zip`.
+1. Download the latest `FFYoutubeDownloader.zip` and unpack the archive.
+2. Go to `about:addons`.
+3. Click the gear icon in the top-right corner.
+4. Click on the "Install Add-on From File" and select `YTDLext.xpi` from the folder where you extracted `FFYoutubeDownloader.zip`.
 5. Run `server.exe` and follow the on-screen instructions.
 
 ## Reinstallation
@@ -25,9 +24,8 @@ This extension is intended only for informational and educational purposes. The 
 
 ### Firefox-based browsers
 1. Delete all downloaded files.
-2. Go to `about:debugging`.
-3. Go to `This Firefox` and remove the YTDL extension.
-4. Install extension as usual.
+2. Go to `about:addons` and remove the YTDL extension.
+3. Install extension as usual.
 
 ## Uninstallation
 1. Delete all downloaded files.
