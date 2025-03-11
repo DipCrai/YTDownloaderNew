@@ -10,6 +10,7 @@ This extension is intended only for informational and educational purposes. The 
 5. Run `server.exe` and follow the on-screen instructions.
 
 ### Firefox-based browsers
+*The extension will work until the browser or PC is restarted.
 1. Download the latest `YTDownloaderNew.zip` and unpack the archive.
 2. Go to `about:debugging`.
 3. Go to `This Firefox`.
