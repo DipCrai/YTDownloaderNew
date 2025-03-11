@@ -26,6 +26,7 @@ This extension is intended only for informational and educational purposes. The 
 1. Delete all downloaded files.
 2. Go to `about:debugging`.
 3. Go to `This Firefox` and remove the YTDL extension.
+4. Install extension as usual.
 
 ## Uninstallation
 1. Delete all downloaded files.
