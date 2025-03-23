@@ -1,5 +1,8 @@
 ## Attention
-This extension is intended only for informational and educational purposes. The author does not encourage piracy in any way. Please be aware that downloading and distributing copyrighted materials without the consent of the copyright holder may result in legal consequences.
+This extension is provided for educational and informational purposes only. The author does not endorse or promote copyright infringement in any form. Please ensure that you comply with all applicable laws regarding downloading and distributing digital content.
+
+Serverside app uses <a href="http://ffmpeg.org">FFmpeg</a> (version 7.1.1-5-g276bd388f3) licensed under the <a href="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPLv2.1</a>.  
+Its source code can be downloaded <a href="https://github.com/FFmpeg/FFmpeg">here</a>.
 
 ## Installation
 ### Chromium-based browsers
