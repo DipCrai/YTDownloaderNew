@@ -270,7 +270,7 @@
 
     const createPlaylistDownloadButton = () => {
         const downloadButtonExist = document.getElementsByClassName("pl-dl-btn")[0];
-        const playlistName = document.querySelector("ytmusic-responsive-header-renderer > h2", ".style-scope.ytmusic-responsive-header-renderer");
+        const playlistName = document.querySelector("ytmusic-responsive-header-renderer > h1", ".style-scope.ytmusic-responsive-header-renderer");
 
         if (!downloadButtonExist && playlistName) {
             playlistName.style.display = "inline-flex";
