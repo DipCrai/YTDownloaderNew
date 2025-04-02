@@ -1,51 +1,77 @@
-(() => {
-    let youtubeMenuRenderer, youtubePlayer, buttonDiv;;
-    let currentVideo = "";
+const serverUrl = "http://localhost:3000";
+let buttonContainer, downloadButton, icon
 
-    const newVideoLoaded = () => {
-        const downloadButtonExist = document.getElementsByClassName("download-btn")[0];
-
-        if(!downloadButtonExist)
-        {
-            buttonDiv = document.createElement("div");
-            buttonDiv.className = "download-btn-div";
-            const downloadButton = document.createElement("img");
-            downloadButton.src = chrome.runtime.getURL("images/white-download-button-24.png");
-            downloadButton.className = "download-btn";
-            downloadButton.title = "Download";
-
-            const waitForRenderer = setInterval(() => {
-                youtubeMenuRenderer = document.querySelector('div ytd-menu-renderer.style-scope.ytd-watch-metadata[menu-active][has-items]');
-                if(youtubeMenuRenderer !== null) {
-                    clearInterval(waitForRenderer);
-                    buttonDiv.appendChild(downloadButton)
-                    youtubeMenuRenderer.appendChild(buttonDiv);
-                }
-            }, 500);
-            youtubePlayer = document.getElementsByClassName("video-stream")[0];
-
-            downloadButton.addEventListener("click", downloadEventHandler);
-        }
+function newVideoLoaded() {
+    if (document.getElementById("custom-download-button") != null)
+    {
+        return;
     }
-    const downloadEventHandler = async () => {
-        const url = window.location.href.split('&')[0];
-        let quality;
-        console.log(url);
-        try {
-            quality = youtubePlayer.videoHeight;
+
+    buttonContainer = document.createElement("yt-button-shape");
+    buttonContainer.id = "custom-download-button";
+    buttonContainer.className = "custom-download-button-container";
+
+    downloadButton = document.createElement("button");
+    downloadButton.className = "custom-download-button";
+    downloadButton.title = "Download";
+    downloadButton.addEventListener("click", downloadEventHandler);
+
+    icon = document.createElement("img");
+    icon.className = "custom-download-button-icon";
+    icon.src = chrome.runtime.getURL("images/white-download-button-24.png");
+
+    const waitForRenderer = setInterval(() => {
+        youtubeMenuRenderer = document.querySelector('div ytd-menu-renderer.style-scope.ytd-watch-metadata[menu-active][has-items]');
+        if(youtubeMenuRenderer != null) {
+            clearInterval(waitForRenderer);
+            youtubeMenuRenderer.appendChild(buttonContainer);
+            buttonContainer.appendChild(downloadButton);
+            downloadButton.appendChild(icon);
         }
-        catch {
-            quality = "9999"
-        }
-        const serverUrl = "http://localhost:3000/video?url=" + encodeURIComponent(url) + "&quality=" + encodeURIComponent(quality);
-        try {
-            const response = await fetch(serverUrl);
+    }, 500);
+}
+async function downloadEventHandler() {
+    icon.src = chrome.runtime.getURL("images/updating-download-button-24.png");
+
+    let response = await pingServer();
+
+    if (!response)
+    {
+        icon.src = chrome.runtime.getURL("images/server-error-24.png");
+        return;
+    }
+
+    try {
+        let url = window.location.href.split('&')[0];
+        let youtubePlayer = document.getElementsByClassName("video-stream")[0];
     
-            const data = await response.json();
-            console.log("Ответ от сервера:", data);
-        } catch (error) {
-            console.log("Ошибка при запросе к серверу:", error);
-        }
+        let fetchUrl = serverUrl + "/video?url=" + 
+            encodeURIComponent(url) + 
+            "&quality=" + encodeURIComponent(youtubePlayer.videoHeight);
+
+        await fetch(fetchUrl);
+        icon.src = chrome.runtime.getURL("images/download-successful-24.png");
     }
-    newVideoLoaded();
-})();
+    catch {
+        icon.src = chrome.runtime.getURL("images/download-error-24.png");
+    }
+}
+
+async function pingServer() 
+{
+    let serverResponse;
+
+    try
+    {
+        await fetch(serverUrl);
+        serverResponse = true;
+    }
+    catch
+    {
+        serverResponse = false;
+    }
+
+    return serverResponse;
+}
+
+(() => { newVideoLoaded(); })();

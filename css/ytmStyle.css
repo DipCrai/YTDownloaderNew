@@ -1,4 +1,18 @@
-.download-btn-div {
+.custom-speed-slider-container {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+}
+.custom-speed-slider {
+    width: 120px;
+    --paper-slider-container-color: #909090;
+    --paper-slider-active-color: #fff;
+    --paper-slider-knob-color: #fff;
+    --paper-slider-disabled-knob-color: #fff;
+    --paper-slider-knob-start-color: #fff;
+    --paper-slider-knob-start-border-color: #fff;
+}
+custom-button {
     display: inline-block;
     position: relative;
     margin: 0 8px 0 0;
@@ -6,28 +20,15 @@
     height: 40px;
     align-content: center;
     align-items: center;
-}
-.download-btn {
-    padding: 8px;
     cursor: pointer;
 }
-.download-btn.disabled {
-    cursor: default;
-}
-.player-toggle-btn-div {
-    display: inline-block;
-    position: relative;
-    margin: 0 8px 0 0;
-    width: 40px;
-    height: 40px;
-    align-content: center;
+.playlist-download-button {
+    width: 36px;
+    height: 36px;
     align-items: center;
-}
-.player-toggle-btn {
-    padding: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
     cursor: pointer;
-}
-.pl-dl-btn-div {
-    margin-left: 12px;
-    align-content: center;
+    border-width: 0px;
+    margin-left: 8px;
 }
