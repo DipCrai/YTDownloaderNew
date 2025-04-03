@@ -2,9 +2,15 @@
   "manifest_version": 3,
   "name": "YTDL",
   "description": "sample extension",
-  "version": "5.0",
+  "version": "5.1",
   "icons": {
     "48": "images/icon-48.png"
+  },
+  "permissions": [
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "js/background.js"
   },
   "content_scripts": [
     {

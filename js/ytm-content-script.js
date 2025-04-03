@@ -244,6 +244,7 @@ function createPlaylistDownloadButton()
     }
 
     let playlistDownloadButton = document.createElement("button");
+    playlistDownloadButton.id = "playlist-download-button";
     playlistDownloadButton.className = "playlist-download-button";
     playlistDownloadButton.title = "Download";
     playlistDownloadButton.addEventListener("click", playlistDownloadEventHandler);
@@ -301,10 +302,11 @@ async function playlistDownloadEventHandler() {
     newVideoLoaded(); 
     playlistLoaded();
 
-    navigation.addEventListener('navigate', () => {
-        if (window.location.href.includes("music.youtube.com/playlist"))
-        {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (message.action === "playlistLoaded") {
+            console.warn("Плейлист загружен на странице!");
             playlistLoaded();
         }
     });
+    
 })();
