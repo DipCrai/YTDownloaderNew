@@ -304,7 +304,6 @@ async function playlistDownloadEventHandler() {
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.action === "playlistLoaded") {
-            console.warn("Плейлист загружен на странице!");
             playlistLoaded();
         }
     });
