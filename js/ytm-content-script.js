@@ -3,11 +3,22 @@ let playerDownloadButton, playerDownloadButtonImage;
 let playerToggleButton, playerToggleButtonImage;
 let rightControls, playerBar, playlistName;
 let playlistDownloadButtonIcon;
+let video;
 
-function newVideoLoaded() 
+function videoLoaded() 
 {
     playerBar = document.getElementsByTagName("ytmusic-player-bar")[0];
     rightControls = document.querySelector(".right-controls-buttons.style-scope.ytmusic-player-bar");
+
+    if (playerBar == null)
+    {
+        return;
+    }
+    if (rightControls == null)
+    {
+        return;
+    }
+
     createDownloadButton();
     createPlayerToggleButton();
     modifyVolumeSlider();
@@ -16,8 +27,12 @@ function newVideoLoaded()
 
 function createDownloadButton() 
 {
-    if (document.getElementById("custom-download-button") != null)
+    playerDownloadButton = document.getElementById("custom-download-button");
+
+    if (playerDownloadButton != null)
     {
+        playerDownloadButton.remove();
+        createDownloadButton();
         return;
     }
 
@@ -34,8 +49,12 @@ function createDownloadButton()
 }
 
 function createPlayerToggleButton() {
-    if (document.getElementById("player-toggle-button") != null)
+    playerToggleButton = document.getElementById("player-toggle-button");
+
+    if (playerToggleButton != null)
     {
+        playerToggleButton.remove();
+        createPlayerToggleButton();
         return;
     }
 
@@ -70,16 +89,21 @@ async function pingServer()
 
 function togglePlayer() 
 {
-    let player = document.querySelector("#player", ".style-scope.ytmusic-player-page");
-    if (player)
+    let mainPanel = document.getElementById("main-panel");
+    let sidePanel = document.getElementById("side-panel");
+    if (mainPanel)
     {
-        if (player.style.display == "none")
+        if (mainPanel.style.display == "none")
         {
-            player.style.display = "";
+            mainPanel.style.display = "";
+            mainPanel.parentElement.style.justifyContent = "";
+            sidePanel.style.width = "";
             playerToggleButtonImage.src = chrome.runtime.getURL("images/disable-player-button-24.png");
             return;
         }
-        player.style.display = "none";
+        mainPanel.style.display = "none";
+        mainPanel.parentElement.style.justifyContent = "center";
+        sidePanel.style.width = "100%";
         playerToggleButtonImage.src = chrome.runtime.getURL("images/enable-player-button-24.png");
     }
 }
@@ -130,7 +154,7 @@ function modifyVolumeSlider()
     {
         return;
     }
-    if (playerBar == null)
+    if (volumeToggle == null)
     {
         return;
     }
@@ -164,8 +188,11 @@ function modifyVolumeSlider()
 
 function createSpeedSlider() 
 {
-    if (document.getElementById("custom-speed-slider") != null)
+    let sliderContainer = document.getElementById("custom-speed-slider-container");
+    if (sliderContainer != null)
     {
+        sliderContainer.remove();
+        createSpeedSlider();
         return;
     }
 
@@ -175,9 +202,9 @@ function createSpeedSlider()
         return;
     }
 
-    let sliderContainer = document.createElement('div');
-    sliderContainer.id = 'custom-speed-slider-container';
-    sliderContainer.className = 'custom-speed-slider-container';
+    sliderContainer = document.createElement('div');
+    sliderContainer.id = "custom-speed-slider-container";
+    sliderContainer.className = "custom-speed-slider-container";
 
     let speedSlider = document.createElement("tp-yt-paper-slider");
     speedSlider.id = "custom-speed-slider";
@@ -205,7 +232,6 @@ function createSpeedSlider()
     let valueChangeHanle = () => {
         speedValue.innerHTML = sliderBar.ariaValueNow + "x";
 
-        let video = document.querySelector('video');
         if (video != null)
         {
             video.playbackRate = sliderBar.ariaValueNow;
@@ -222,28 +248,28 @@ function createSpeedSlider()
 
 function playlistLoaded() 
 {
-    const waitForName = setInterval(() => {
-        playlistName = document.querySelector("ytmusic-responsive-header-renderer > h1", ".style-scope.ytmusic-responsive-header-renderer");
-        if(playlistName != null) {
-            clearInterval(waitForName);
-            modifyPlaylistName();
-            createPlaylistDownloadButton();
-        }
-    }, 500);
-}
-
-function createPlaylistDownloadButton() 
-{
-    if (document.getElementById("playlist-download-button") != null)
-    {
-        return;
-    }
+    playlistName = document.querySelector("ytmusic-responsive-header-renderer > h1", ".style-scope.ytmusic-responsive-header-renderer");
     if (playlistName == null)
     {
         return;
     }
 
-    let playlistDownloadButton = document.createElement("button");
+    modifyPlaylistName();
+    createPlaylistDownloadButton();
+}
+
+function createPlaylistDownloadButton() 
+{
+    let playlistDownloadButton = document.getElementById("playlist-download-button");
+
+    if (playlistDownloadButton != null)
+    {
+        playlistDownloadButton.remove();
+        createPlaylistDownloadButton();
+        return;
+    }
+
+    playlistDownloadButton = document.createElement("button");
     playlistDownloadButton.id = "playlist-download-button";
     playlistDownloadButton.className = "playlist-download-button";
     playlistDownloadButton.title = "Download";
@@ -259,11 +285,6 @@ function createPlaylistDownloadButton()
 
 function modifyPlaylistName() 
 {
-    if (playlistName == null)
-    {
-        return;
-    }
-
     playlistName.style.display = "inline-flex";
     playlistName.style.justifyContent = "center";
     playlistName.style.width = "100%";
@@ -298,14 +319,23 @@ async function playlistDownloadEventHandler() {
 }
 
 (() => 
-{ 
-    newVideoLoaded(); 
+{
     playlistLoaded();
+    videoLoaded();
+
+    video = document.querySelector('video');
+    if (video != null)
+    {
+        video.addEventListener("loadstart", ()=>{
+            videoLoaded();
+        });
+    }
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.action === "playlistLoaded") {
+        if (message.action == "playlistLoaded") 
+        {
             playlistLoaded();
         }
     });
-    
-})();
+}
+)();
