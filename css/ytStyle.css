@@ -1,12 +1,14 @@
-.custom-download-button-container {
-    margin-left: 8px;
-}
 .custom-download-button {
     width: 36px;
     height: 36px;
-    align-items: center;
+    margin-left: 8px;
     background: rgba(255,255,255,0.1);
     border-radius: 8px;
     cursor: pointer;
     border-width: 0px;
+    padding: 0;
+}
+.custom-download-button-icon {
+    display: inline;
+    vertical-align: middle;
 }

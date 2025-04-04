@@ -1,15 +1,11 @@
 const serverUrl = "http://localhost:3000";
-let buttonContainer, downloadButton, icon
+let downloadButton, icon
 
 function newVideoLoaded() {
     if (document.getElementById("custom-download-button") != null)
     {
         return;
     }
-
-    buttonContainer = document.createElement("yt-button-shape");
-    buttonContainer.id = "custom-download-button";
-    buttonContainer.className = "custom-download-button-container";
 
     downloadButton = document.createElement("button");
     downloadButton.className = "custom-download-button";
@@ -24,8 +20,7 @@ function newVideoLoaded() {
         youtubeMenuRenderer = document.querySelector('div ytd-menu-renderer.style-scope.ytd-watch-metadata[menu-active][has-items]');
         if(youtubeMenuRenderer != null) {
             clearInterval(waitForRenderer);
-            youtubeMenuRenderer.appendChild(buttonContainer);
-            buttonContainer.appendChild(downloadButton);
+            youtubeMenuRenderer.appendChild(downloadButton);
             downloadButton.appendChild(icon);
         }
     }, 500);

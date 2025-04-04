@@ -25,10 +25,14 @@ custom-button {
 .playlist-download-button {
     width: 36px;
     height: 36px;
-    align-items: center;
     background: rgba(255,255,255,0.1);
     border-radius: 8px;
     cursor: pointer;
     border-width: 0px;
     margin-left: 8px;
+    padding: 0;
+}
+.playlist-download-button-icon {
+    display: inline;
+    vertical-align: middle;
 }
