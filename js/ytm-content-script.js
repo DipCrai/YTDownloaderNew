@@ -175,14 +175,14 @@ function modifyVolumeSlider()
     volumeSlider.style.width = "200px";
 
     let volumeValue = document.createElement("p");
-    volumeValue.innerHTML = volumeSlider.getAttribute("aria-valuenow") + "%";
+    volumeValue.textContent = volumeSlider.getAttribute("aria-valuenow") + "%";
     volumeSlider.appendChild(volumeValue);
 
     volumeSlider.addEventListener("immediate-value-change", () => {
-        volumeValue.innerHTML = volumeSlider.getAttribute("aria-valuenow") + "%";
+        volumeValue.textContent = volumeSlider.getAttribute("aria-valuenow") + "%";
     });
     volumeSlider.addEventListener("value-change", () => {
-        volumeValue.innerHTML = volumeSlider.getAttribute("aria-valuenow") + "%";
+        volumeValue.textContent = volumeSlider.getAttribute("aria-valuenow") + "%";
     })
 }
 
@@ -217,7 +217,7 @@ function createSpeedSlider()
     speedSlider.title = "Speed";
 
     let speedValue = document.createElement("p");
-    speedValue.innerHTML = "1x";
+    speedValue.textContent = "1x";
 
     speedSlider.addEventListener("click", function (event) {
         event.preventDefault();
@@ -230,7 +230,7 @@ function createSpeedSlider()
 
     let sliderBar = speedSlider.querySelector("#sliderBar");
     let valueChangeHanle = () => {
-        speedValue.innerHTML = sliderBar.ariaValueNow + "x";
+        speedValue.textContent = sliderBar.ariaValueNow + "x";
 
         if (videoElement != null)
         {
