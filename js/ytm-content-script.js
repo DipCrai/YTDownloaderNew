@@ -323,13 +323,16 @@ async function playlistDownloadEventHandler() {
     playlistLoaded();
     videoLoaded();
 
-    videoElement = document.querySelector('video');
-    if (videoElement != null)
-    {
-        videoElement.addEventListener("loadstart", ()=>{
-            videoLoaded();
-        });
-    }
+    let waitForVideo = setInterval(()=>{
+        videoElement = document.querySelector('video');
+        if (videoElement != null)
+        {
+            videoElement.addEventListener("loadstart", ()=>{
+                videoLoaded();
+            });
+            clearInterval(waitForVideo);
+        }
+    }, 200);
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.action == "playlistLoaded") 
