@@ -149,7 +149,6 @@ function modifyVolumeSlider()
 
     enableVolumeSlider();
     volumeSlider.style.width = "200px";
-    volumeSlider.style.marginRight = "16px";
 
     let volumeValue = document.createElement("p");
     volumeValue.innerHTML = volumeSlider.getAttribute("aria-valuenow") + "%";
