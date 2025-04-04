@@ -3,7 +3,7 @@ let playerDownloadButton, playerDownloadButtonImage;
 let playerToggleButton, playerToggleButtonImage;
 let rightControls, playerBar, playlistName;
 let playlistDownloadButtonIcon;
-let video;
+let videoElement;
 
 function videoLoaded() 
 {
@@ -232,9 +232,9 @@ function createSpeedSlider()
     let valueChangeHanle = () => {
         speedValue.innerHTML = sliderBar.ariaValueNow + "x";
 
-        if (video != null)
+        if (videoElement != null)
         {
-            video.playbackRate = sliderBar.ariaValueNow;
+            videoElement.playbackRate = sliderBar.ariaValueNow;
         }
     };
 
@@ -323,10 +323,10 @@ async function playlistDownloadEventHandler() {
     playlistLoaded();
     videoLoaded();
 
-    video = document.querySelector('video');
-    if (video != null)
+    videoElement = document.querySelector('video');
+    if (videoElement != null)
     {
-        video.addEventListener("loadstart", ()=>{
+        videoElement.addEventListener("loadstart", ()=>{
             videoLoaded();
         });
     }
