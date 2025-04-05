@@ -4,6 +4,7 @@ let playerToggleButton, playerToggleButtonImage;
 let rightControls, playerBar, playlistName;
 let playlistDownloadButtonIcon;
 let videoElement;
+let audioCtx, audioSource, gainNode;
 
 function videoLoaded() 
 {
@@ -23,6 +24,11 @@ function videoLoaded()
     createPlayerToggleButton();
     modifyVolumeSlider();
     createSpeedSlider();
+
+    if (videoElement.volume < 1)
+    {
+        gainNode.gain.value = 1;
+    }
 }
 
 function createDownloadButton() 
@@ -164,26 +170,31 @@ function modifyVolumeSlider()
         volumeSlider.classList.add("on-hover");
     }
 
-    playerBar.addEventListener("mouseover", () => {
-        enableVolumeSlider();
-    });
-    volumeToggle.addEventListener("mouseover", () => {
-        enableVolumeSlider();
-    });
+    playerBar.addEventListener("mouseover", enableVolumeSlider);
+    volumeToggle.addEventListener("mouseover", enableVolumeSlider);
 
     enableVolumeSlider();
     volumeSlider.style.width = "200px";
+    volumeSlider.setAttribute("max", 200);
 
+    let sliderBar = volumeSlider.querySelector("#sliderBar");
     let volumeValue = document.createElement("p");
-    volumeValue.textContent = volumeSlider.getAttribute("aria-valuenow") + "%";
+
+    volumeValue.textContent = sliderBar.ariaValueNow + "%";
     volumeSlider.appendChild(volumeValue);
 
-    volumeSlider.addEventListener("immediate-value-change", () => {
-        volumeValue.textContent = volumeSlider.getAttribute("aria-valuenow") + "%";
-    });
-    volumeSlider.addEventListener("value-change", () => {
-        volumeValue.textContent = volumeSlider.getAttribute("aria-valuenow") + "%";
-    })
+    let changeVolume = (event) => {   
+        event.preventDefault();
+        event.stopPropagation();
+        
+        let volumeValueNow = sliderBar.ariaValueNow;
+        volumeValue.textContent = volumeValueNow + "%";
+        videoElement.volume = 1;
+        gainNode.gain.value = volumeValueNow/100;
+    };
+
+    volumeSlider.addEventListener("immediate-value-change", changeVolume);
+    volumeSlider.addEventListener("value-change", changeVolume)
 }
 
 function createSpeedSlider() 
@@ -219,7 +230,7 @@ function createSpeedSlider()
     let speedValue = document.createElement("p");
     speedValue.textContent = "1x";
 
-    speedSlider.addEventListener("click", function (event) {
+    sliderContainer.addEventListener("click", function (event) {
         event.preventDefault();
         event.stopPropagation();
     });
@@ -231,19 +242,11 @@ function createSpeedSlider()
     let sliderBar = speedSlider.querySelector("#sliderBar");
     let valueChangeHanle = () => {
         speedValue.textContent = sliderBar.ariaValueNow + "x";
-
-        if (videoElement != null)
-        {
-            videoElement.playbackRate = sliderBar.ariaValueNow;
-        }
+        videoElement.playbackRate = sliderBar.ariaValueNow;
     };
 
-    speedSlider.addEventListener("immediate-value-change", () => {
-        valueChangeHanle();
-    });
-    speedSlider.addEventListener("value-change", () => {
-        valueChangeHanle();
-    });
+    speedSlider.addEventListener("immediate-value-change", valueChangeHanle);
+    speedSlider.addEventListener("value-change", valueChangeHanle);
 }
 
 function playlistLoaded() 
@@ -318,18 +321,25 @@ async function playlistDownloadEventHandler() {
     }
 }
 
+function createAudioContext() 
+{
+    audioCtx = new AudioContext();
+    audioSource = audioCtx.createMediaElementSource(videoElement);
+    gainNode = audioCtx.createGain();
+
+    audioSource.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+}
+
 (() => 
 {
-    playlistLoaded();
-    videoLoaded();
-
     let waitForVideo = setInterval(()=>{
         videoElement = document.querySelector('video');
         if (videoElement != null)
         {
-            videoElement.addEventListener("loadstart", ()=>{
-                videoLoaded();
-            });
+            createAudioContext();
+            videoElement.addEventListener("loadstart", videoLoaded);
+            videoLoaded();
             clearInterval(waitForVideo);
         }
     }, 200);
@@ -340,5 +350,7 @@ async function playlistDownloadEventHandler() {
             playlistLoaded();
         }
     });
+
+    playlistLoaded();
 }
 )();
