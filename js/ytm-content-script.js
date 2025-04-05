@@ -183,14 +183,19 @@ function modifyVolumeSlider()
     volumeValue.textContent = sliderBar.ariaValueNow + "%";
     volumeSlider.appendChild(volumeValue);
 
-    let changeVolume = (event) => {   
-        event.preventDefault();
-        event.stopPropagation();
-        
+    let changeVolume = () => {   
         let volumeValueNow = sliderBar.ariaValueNow;
         volumeValue.textContent = volumeValueNow + "%";
-        videoElement.volume = 1;
-        gainNode.gain.value = volumeValueNow/100;
+
+        if (volumeValueNow >= 100)
+        {
+            videoElement.volume = 1;
+            gainNode.gain.value = volumeValueNow/100;
+        }
+        else
+        {
+            gainNode.gain.value = 1;
+        }
     };
 
     volumeSlider.addEventListener("immediate-value-change", changeVolume);
