@@ -56,7 +56,8 @@ def download_playlist():
         ydl_opts = {
             'format': 'bestaudio/best',
             'noplaylist': False,
-            'outtmpl': output_path
+            'outtmpl': output_path,
+            'ignoreerrors': True
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
