@@ -1,10 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import yt_dlp
-import re
-import subprocess
-import platform
-import sys
 import os
 
 app = Flask(__name__)
@@ -13,61 +9,6 @@ CORS(app)
 def get_download_folder():
     home = os.path.expanduser("~")
     return os.path.join(home, "Downloads")
-
-def check_ffmpeg():
-    try:
-        subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    except FileNotFoundError:
-        install_ffmpeg()
-
-def install_ffmpeg():
-    system = platform.system()
-    try:
-        if system == "Windows":
-            subprocess.run(["winget", "install", "ffmpeg"], check=True)
-        elif system == "Linux":
-            subprocess.run(["sudo", "apt-get", "install", "-y", "ffmpeg"], check=True)
-        elif system == "Darwin":
-            subprocess.run(["brew", "install", "ffmpeg"], check=True)
-        else:
-            print("Unsupported OS.")
-            sys.exit(1)
-    except Exception as e:
-        print(f"Ошибка установки ffmpeg: {e}")
-        sys.exit(1)
-
-    print("ffmpeg успешно установлен. Перезапустите сервер")
-    input()
-    sys.exit(0)
-
-def add_to_autostart():
-    system = platform.system()
-    script_path = os.path.abspath(sys.argv[0])
-
-    if system == "Windows":
-        import winreg as reg
-        key = reg.OpenKey(reg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Run", 0, reg.KEY_SET_VALUE)
-        reg.SetValueEx(key, "YTDL-server-by-DC", 0, reg.REG_SZ, f'"{script_path}" -silent')
-        print("Приложение добавлено в автозагрузку.")
-    elif system == "Linux":
-        autostart_dir = os.path.expanduser("~/.config/autostart")
-        os.makedirs(autostart_dir, exist_ok=True)
-        with open(os.path.join(autostart_dir, "ytdl_server_by_dc.desktop"), 'w') as f:
-            f.write(f"""
-[Desktop Entry]
-Type=Application
-Exec=python3 "{script_path}" &
-Hidden=false
-NoDisplay=true
-X-GNOME-Autostart-enabled=true
-Name=YTDL-server-by-DC
-Comment=My Flask Application
-""")
-        print("Приложение добавлено в автозагрузку.")
-    elif system == "Darwin":
-        print("Добавление в автозагрузку для macOS требует дополнительных настроек.")
-    else:
-        print("Unsupported OS.")
 
 @app.route('/')
 def home():
@@ -115,15 +56,7 @@ def download_playlist():
         ydl_opts = {
             'format': 'bestaudio/best',
             'noplaylist': False,
-            'quiet': False,
-            'extractaudio': True,
-            'audioquality': 0,
-            'outtmpl': output_path,
-            'ignoreerrors': True,
-            'postprocessors': [{
-                'key': 'FFmpegMetadata',
-                'add_metadata': True,
-            }],
+            'outtmpl': output_path
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -134,6 +67,4 @@ def download_playlist():
         return jsonify({"message": "Ошибка: " + str(e)}), 500
 
 if __name__ == '__main__':
-    check_ffmpeg()
-    add_to_autostart()
     app.run(port=3000)
