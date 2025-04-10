@@ -10,14 +10,14 @@ Its source code can be downloaded <a href="https://github.com/FFmpeg/FFmpeg">her
 2. Go to `chrome://extensions/` (or `about:extensions`).
 3. Enable Developer Mode.
 4. Click on the "Load unpacked" button and select the folder where you extracted `YTDownloaderNew.zip`.
-5. Run `server.exe` and keep it in background.
+5. Run `server.exe`.
 
 ### Firefox-based browsers
 1. Download the latest `FFYoutubeDownloader.zip` and unpack the archive.
 2. Go to `about:addons`.
 3. Click the gear icon in the top-right corner.
 4. Click on the "Install Add-on From File" and select `YTDLext.xpi` from the folder where you extracted `FFYoutubeDownloader.zip`.
-5. Run `server.exe` and keep it in background.
+5. Run `server.exe`.
 
 ## Uninstallation/Reinstallation
 ### Chromium-based browsers
