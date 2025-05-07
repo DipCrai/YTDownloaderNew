@@ -4,5 +4,5 @@ set reg_key="HKCU\Software\Microsoft\Windows\CurrentVersion\Run"
 
 reg delete "%reg_key%" /v "YTDL-server-by-DC" /f
 
-echo server.exe added to autostart.
+echo server.exe removed from autostart.
 pause
